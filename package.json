@@ -1,0 +1,32 @@
+{
+  "name": "proxy_server_typescript",
+  "version": "1.0.0",
+  "description": "Proxy server on typescript for Technopark 3 sem",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc index.ts && DEBUG=http node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marksadykov/proxy_server_typescript.git"
+  },
+  "keywords": [
+    "proxy",
+    "server",
+    "typescript"
+  ],
+  "author": "Mark Sadykov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marksadykov/proxy_server_typescript/issues"
+  },
+  "homepage": "https://github.com/marksadykov/proxy_server_typescript#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.34"
+  },
+  "dependencies": {
+    "http": "0.0.1-security",
+    "http-proxy": "^1.18.1"
+  }
+}
