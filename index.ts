@@ -1,40 +1,15 @@
 "use strict";
+import { config } from './config/config';
+import { requestHandler } from './components/requestHandler';
 
-function requestHandler(client_req: any, client_res: any) {
-    console.log('serve: ' + client_req.url);
-    delete client_req.headers['proxy-connection'];
+const http = require('http');
+const net = require('net');
+const url = require('url');
 
-    const regPath = new RegExp(client_req.headers.host);
-    const optionPath = client_req.url.replace(regPath, '').substr(client_req.url.replace(regPath, '').indexOf('://') + 3);
-    const options = {
-        hostname: client_req.headers.host,
-        port: 80,
-        path: optionPath,
-        method: client_req.method,
-        headers: client_req.headers
-    };
+const port = config.port;
+const server = http.createServer(requestHandler);
 
-    const proxy = http.request(options, function (res: any) {
-        client_res.writeHead(res.statusCode, res.headers)
-        res.pipe(client_res, {
-            end: true
-        });
-    });
-
-    client_req.pipe(proxy, {
-        end: true
-    });
-}
-
-
-const http = require('http')
-const port = 8080
-const net = require('net')
-const url = require('url')
-
-const server = http.createServer(requestHandler)
-
-const listener = server.listen(port, (err: any) => {
+const listener = server.listen(port, (err: any): (void) => {
     if (err) {
         return console.error(err)
     }
@@ -42,9 +17,9 @@ const listener = server.listen(port, (err: any) => {
     console.log(`Server is listening on address ${info.address} port ${info.port}`)
 })
 
-server.on('connect', (req: any, clientSocket: any, head: any) => { // listen only for HTTP/1.1 CONNECT method
+server.on('connect', (req: any, clientSocket: any, head: any) => {
     console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url)
-    const {port, hostname} = url.parse(`//${req.url}`, false, true) // extract destination host and port from CONNECT request
+    const {port, hostname} = url.parse(`//${req.url}`, false, true)
     if (hostname && port) {
         const serverErrorHandler = (err: any) => {
             console.error(err.message);
