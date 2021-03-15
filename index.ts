@@ -4,8 +4,6 @@ import { requestHandler } from './components/requestHandler';
 import { requestHandlerHttps } from './components/requestHandlerHttps';
 
 const http = require('http');
-const net = require('net');
-const url = require('url');
 
 const port = config.port;
 const server = http.createServer(requestHandler);
