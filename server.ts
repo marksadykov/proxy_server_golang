@@ -4,20 +4,7 @@ const path = require('path')
 
 const port = 8000;
 
-const mimeTypes = {
-    '.html': 'text/html',
-    '.js': 'application/javascript',
-    '.css': 'text/css',
-    '.ico': 'image/x-icon',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.json': 'application/json',
-    '.woff': 'font/woff',
-    '.woff2': 'font/woff2'
-}
-const mimeTypes = new Map([
+export const mimeTypes = new Map([
     ['.html', 'text/html'],
     ['.js', 'application/javascript'],
     ['.css', 'text/css'],
@@ -25,14 +12,13 @@ const mimeTypes = new Map([
     ['.png', 'image/png'],
     ['.jpg', 'image/jpeg'],
     ['.gif', 'image/gif'],
-    ['.gif', 'image/gif'],
-    ['.gif', 'image/gif'],
-    ['.gif', 'image/gif'],
+    ['.svg', 'image/svg+xml'],
+    ['.json', 'application/json'],
+    ['.woff', 'font/woff'],
+    ['.woff2', 'font/woff2'],
 ]);
 
-const server = http.createServer()
-
-server.on('request', (req: any, res: any) => {
+export function staticHandler(req: any, res: any) {
     const parsedUrl = new URL(req.url, 'https://node-http.glitch.me/')
 
     let pathName = parsedUrl.pathname
@@ -57,7 +43,7 @@ server.on('request', (req: any, res: any) => {
 
     fs.exists(filePath, function (exists: boolean) {
 
-        if (!exists || !mimeTypes[ext]) {
+        if (!exists || !mimeTypes.get(ext)) {
             console.log('File does not exist: ' + pathName)
             res.writeHead(404, {'Content-Type': 'text/plain'})
             res.write('404 Not Found')
@@ -65,13 +51,11 @@ server.on('request', (req: any, res: any) => {
             return
         }
 
-        res.writeHead(200, {'Content-Type': mimeTypes[ext]})
+        res.writeHead(200, {'Content-Type': mimeTypes.get(ext)})
 
         const fileStream = fs.createReadStream(filePath)
         fileStream.pipe(res)
     })
-})
+};
 
-server.listen(port);
 
-console.log(`Server listening on ${port}`);
