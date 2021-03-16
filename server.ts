@@ -15,10 +15,12 @@ export const mimeTypes = new Map([
     ['.woff2', 'font/woff2'],
 ]);
 
-export function staticHandler(req: any, res: any) {
+export function staticHandler(req: any, res: any, pathArray: any) {
     const parsedUrl = new URL(req.url, 'https://node-http.glitch.me/')
 
     let pathName = parsedUrl.pathname
+
+    pathArray.push(pathName);
 
     let ext = path.extname(pathName)
 
@@ -53,6 +55,8 @@ export function staticHandler(req: any, res: any) {
         const fileStream = fs.createReadStream(filePath)
         fileStream.pipe(res)
     })
+
+    return pathName;
 };
 
 
