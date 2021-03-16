@@ -1,6 +1,9 @@
 import * as http from "http";
+import {StringDecoder} from "string_decoder";
 
-export function requestHandler(client_req: any, client_res: any) {
+const ab2str = require('arraybuffer-to-string')
+
+export function requestHandler(client_req: any, client_res: any, history: any) {
     console.log('serve: ' + client_req.url);
     delete client_req.headers['proxy-connection'];
 
@@ -15,9 +18,42 @@ export function requestHandler(client_req: any, client_res: any) {
     };
 
     const proxy = http.request(options, function (res: any) {
-        client_res.writeHead(res.statusCode, res.headers)
+        client_res.writeHead(res.statusCode, res.headers);
+
         res.pipe(client_res, {
             end: true
+        });
+
+        let body = '';
+        res.on('data', function (chunk: any) {
+            // console.log(eval(chunk).toString('utf8'));
+            // console.log('chunk.toString(\'utf8\')', chunk.toString('utf8'));
+            // console.log(decoder.write(chunk));
+            // body += chunk.toString('utf8');
+
+            let json = JSON.stringify(chunk);
+            // console.log('json', json);
+            let AfterJson = JSON.parse(json)
+            console.log('AfterJson', AfterJson.data);
+
+            // console.log('chunk', chunk);
+            let uint8 = new Uint8Array(AfterJson.data);
+            //
+            // console.log('base64', ab2str(uint8));
+            // let str = new TextDecoder().decode(chunk);
+            // console.log('str', str);
+            // body += decoder.write(chunk);
+            console.log('chunk', AfterJson.data);
+            // console.log('String.fromCharCode(chunk)', AfterJson.data);
+            body += ab2str(uint8);
+        });
+        res.on('end', function () {
+            history.push({
+                req: client_req,
+                clientSocket: client_res,
+                type: 'http',
+                body: body,
+            });
         });
     });
 

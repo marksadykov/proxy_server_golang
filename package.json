@@ -26,6 +26,7 @@
     "@types/node": "^14.14.34"
   },
   "dependencies": {
+    "arraybuffer-to-string": "^1.0.2",
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "http-proxy": "^1.18.1",

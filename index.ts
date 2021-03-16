@@ -19,7 +19,7 @@ app.get('/', (req: any, res: any) => {
 app.get('/requests', (req: any, res: any) => {
     let historyText = '';
     history.forEach((item: any, index: any)=>{
-        historyText += `<div><span>id </span><span>${index}</span><span> </span><span>${item}</span></div><hr>`;
+        historyText += `<div><span>id </span><span>${index}</span><span> </span><span>${item?.req?.headers?.host}</span></div><hr>`;
     });
     res.send(`
         <div>
@@ -29,13 +29,46 @@ app.get('/requests', (req: any, res: any) => {
     `);
 })
 
+app.get('/requests/:id', (req: any, res: any) => {
+    let response = '';
+    const item = history[req.params.id];
+    if (item) {
+        response = `<div><span>${item?.req?.headers?.host}</span></div>
+                        <div><span>${item?.body}</span></div>
+                    <hr>`;
+    } else {
+        response = `<div>Нет запроса с id = ${req.params.id}</div>`
+    }
+    res.send(response);
+})
+
+app.get('/repeat/:id', (req: any, res: any) => {
+    let response = '';
+    const item = history[req.params.id];
+    if (item) {
+        if (item.type === 'http') {
+            requestHandler(item.req, item.clientSocket, history);
+        }
+        if (item.type === 'https') {
+            requestHandlerHttps(item.req, item.clientSocket, 'a', history);
+        }
+        response = `<div><span>${item?.req?.headers?.host} повторно!</span></div><hr>`;
+    } else {
+        response = `<div>Нет запроса с id = ${req.params.id}</div>`
+    }
+    res.send(response);
+})
+
 
 app.listen(portStatic, () => {
     console.log(`App listening at http://localhost:${portStatic}`);
 })
 
 const port = config.port;
-const server = http.createServer(requestHandler);
+const server = http.createServer((client_req: any, client_res: any) => {
+        return requestHandler.call(this, client_req, client_res, history);
+    }
+);
 const listener = server.listen(port, (err: any): (void) => {
     if (err) {
         return console.error(err)

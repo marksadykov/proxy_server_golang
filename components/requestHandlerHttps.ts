@@ -1,11 +1,9 @@
 import * as net from "net";
 import * as url from "url";
 
+const ab2str = require('arraybuffer-to-string')
+
 export function requestHandlerHttps (req: any, clientSocket: any, head: any, history: any) {
-    history.push({
-        req: req,
-        clientSocket: clientSocket,
-    });
     console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url);
     const {port, hostname} = url.parse(`//${req.url}`, false, true);
     if (hostname && port) {
@@ -41,6 +39,21 @@ export function requestHandlerHttps (req: any, clientSocket: any, head: any, his
                 'HTTP/1.1 200 Connection Established',
                 'Proxy-agent: Node-VPN',
             ].join('\r\n'));
+
+            let body = '';
+            clientSocket.on('data', function (chunk: any) {
+                let str = new TextDecoder().decode(chunk);
+                body += str;
+            });
+            clientSocket.on('end', function () {
+                history.push({
+                    req: req,
+                    clientSocket: clientSocket,
+                    type: 'https',
+                    body: body,
+                });
+            });
+
             clientSocket.write('\r\n\r\n');
             serverSocket.pipe(clientSocket, {end: false});
             clientSocket.pipe(serverSocket, {end: false});
