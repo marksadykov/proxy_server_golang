@@ -2,26 +2,38 @@
 import { config } from './config/config';
 import { requestHandler } from './components/requestHandler';
 import { requestHandlerHttps } from './components/requestHandlerHttps';
-import { staticHandler } from "./server";
-// import { Router } from "./router";
+import app from "./server";
 
+const portStatic = config.portStatic;
 const Window = require('window');
 const window = new Window();
-// const router = new Router(window, 'history');
 
 const http = require('http');
 
-const portStatic = config.portStatic;
-const serverStatic = http.createServer()
-const pathArray = [];
-serverStatic.on('request', (req: any, res: any) => {
-    return staticHandler.call(this, req, res, pathArray);
-});
-
-serverStatic.listen(portStatic);
-console.log(`Server listening on ${portStatic}`);
-
 const history = [];
+
+app.get('/', (req: any, res: any) => {
+    res.send('<div>lel</div>');
+})
+
+app.get('/requests', (req: any, res: any) => {
+    let historyText = '';
+    history.forEach((item: any, index: any)=>{
+        historyText += `<div><span>id </span><span>${index}</span><span> </span><span>${item}</span></div><hr>`;
+    });
+    res.send(`
+        <div>
+            <div>requests</div>
+            <div>${historyText}</div>
+        </div>
+    `);
+})
+
+
+app.listen(portStatic, () => {
+    console.log(`App listening at http://localhost:${portStatic}`);
+})
+
 const port = config.port;
 const server = http.createServer(requestHandler);
 const listener = server.listen(port, (err: any): (void) => {
@@ -35,15 +47,3 @@ const listener = server.listen(port, (err: any): (void) => {
 server.on('connect', (req: any, clientSocket: any, head: any) => {
     return requestHandlerHttps.call(this, req, clientSocket, head, history);
 });
-
-// window.addEventListener('reload', () => {
-//     console.log('pathname', pathArray);
-// })
-
-console.log('pathname', pathArray);
-
-// setTimeout(() => {
-//     // @ts-ignore
-//     console.log(history);
-//     return requestHandlerHttps.call(this, history[0].req, history[0].clientSocket, 'b', history);
-// }, 10000);
