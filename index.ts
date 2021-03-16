@@ -12,6 +12,7 @@ serverStatic.on('request', staticHandler);
 serverStatic.listen(portStatic);
 console.log(`Server listening on ${portStatic}`);
 
+const history = [];
 const port = config.port;
 const server = http.createServer(requestHandler);
 const listener = server.listen(port, (err: any): (void) => {
@@ -22,4 +23,12 @@ const listener = server.listen(port, (err: any): (void) => {
     console.log(`Server is listening on address ${info.address} port ${info.port}`)
 })
 
-server.on('connect', requestHandlerHttps);
+server.on('connect', (req: any, clientSocket: any, head: any) => {
+    return requestHandlerHttps.call(this, req, clientSocket, head, history);
+});
+
+setTimeout(() => {
+    // @ts-ignore
+    console.log(history);
+    return requestHandlerHttps.call(this, history[0].req, history[0].clientSocket, 'b', history);
+}, 10000);

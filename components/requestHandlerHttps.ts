@@ -1,10 +1,13 @@
 import * as net from "net";
 import * as url from "url";
 
-export function requestHandlerHttps (req: any, clientSocket: any, head: any) {
-    console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url)
-    console.log('6', clientSocket);
-    const {port, hostname} = url.parse(`//${req.url}`, false, true)
+export function requestHandlerHttps (req: any, clientSocket: any, head: any, history: any) {
+    history.push({
+        req: req,
+        clientSocket: clientSocket,
+    });
+    console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url);
+    const {port, hostname} = url.parse(`//${req.url}`, false, true);
     if (hostname && port) {
         const serverErrorHandler = (err: any) => {
             console.error(err.message);

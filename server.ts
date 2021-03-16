@@ -1,8 +1,5 @@
-const http = require('http')
 const fs = require('fs')
 const path = require('path')
-
-const port = 8000;
 
 export const mimeTypes = new Map([
     ['.html', 'text/html'],
