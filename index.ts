@@ -19,7 +19,11 @@ app.get('/', (req: any, res: any) => {
 app.get('/requests', (req: any, res: any) => {
     let historyText = '';
     history.forEach((item: any, index: any)=>{
-        historyText += `<div><span>id </span><span>${index}</span><span> </span><span>${item?.req?.headers?.host}</span></div><hr>`;
+        historyText += `<div>
+            <span>id </span><span>${index}</span>
+            <span> </span><span>${item?.req?.headers?.host}</span>
+            <div>path: ${item?.optionPath}</div>
+            </div><hr>`;
     });
     res.send(`
         <div>
@@ -34,6 +38,7 @@ app.get('/requests/:id', (req: any, res: any) => {
     const item = history[req.params.id];
     if (item) {
         response = `<div><span>${item?.req?.headers?.host}</span></div>
+                        <div>path: ${item?.optionPath}</div>
                         <div>Ответ:</div>
                         <div>${item?.body}</div>
                     <hr>`;
@@ -57,6 +62,7 @@ app.get('/repeat/:id', (req: any, res: any) => {
                     <span>${item?.req?.headers?.host} повторно!</span>
                     </div>
                     <div>
+                    <div>path: ${item?.optionPath}</div>
                     <div>Ответ:</div>
                     <div>${item?.body}</div>
                     </div>

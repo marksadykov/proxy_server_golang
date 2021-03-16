@@ -37,6 +37,7 @@ export function requestHandler(client_req: any, client_res: any, history: any) {
                 clientSocket: client_res,
                 type: 'http',
                 body: body,
+                optionPath: optionPath,
             });
         });
     });

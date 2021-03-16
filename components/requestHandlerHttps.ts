@@ -5,6 +5,8 @@ const ab2str = require('arraybuffer-to-string')
 
 export function requestHandlerHttps (req: any, clientSocket: any, head: any, history: any) {
     console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url);
+    const regPath = new RegExp(req.headers.host.slice(0, req.headers.host.length - 4));
+    const optionPath = req.headers.referer.replace(regPath, '').substr(req.headers.referer.replace(regPath, '').indexOf('://') + 3);
     const {port, hostname} = url.parse(`//${req.url}`, false, true);
     if (hostname && port) {
         const serverErrorHandler = (err: any) => {
@@ -53,6 +55,7 @@ export function requestHandlerHttps (req: any, clientSocket: any, head: any, his
                     clientSocket: clientSocket,
                     type: 'https',
                     body: body,
+                    optionPath: optionPath,
                 });
             });
 
