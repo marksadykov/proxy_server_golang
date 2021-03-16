@@ -1,5 +1,4 @@
 import * as http from "http";
-import {StringDecoder} from "string_decoder";
 
 const ab2str = require('arraybuffer-to-string')
 

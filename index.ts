@@ -15,14 +15,15 @@ const http = require('http');
 const history = [];
 
 app.get('/', (req: any, res: any) => {
-    res.send(`<div>
+    const response = `<div>
         <div>слушает на порту 8080</div>
         <div>на порту 8000 веб-интерфейс</div>
         <div>/requests – список запросов</div>
         <div>/requests/id – вывод 1 запроса</div>
         <div>/repeat/id – повторная отправка запроса</div>
         <div>/scan/id – сканирование запроса</div>
-        </div>`);
+        </div>`
+    res.send(config.start + response + config.end);
 })
 
 app.get('/requests', (req: any, res: any) => {
@@ -34,12 +35,13 @@ app.get('/requests', (req: any, res: any) => {
             <div>path: ${item?.optionPath}</div>
             </div><hr>`;
     });
-    res.send(`
+    const response = `
         <div>
             <div>requests</div>
             <div>${historyText}</div>
         </div>
-    `);
+    `
+    res.send(config.start + response + config.end);
 })
 
 app.get('/requests/:id', (req: any, res: any) => {
@@ -54,7 +56,7 @@ app.get('/requests/:id', (req: any, res: any) => {
     } else {
         response = `<div>Нет запроса с id = ${req.params.id}</div>`
     }
-    res.send(response);
+    res.send(config.start + response + config.end);
 })
 
 app.get('/repeat/:id', (req: any, res: any) => {
@@ -79,7 +81,7 @@ app.get('/repeat/:id', (req: any, res: any) => {
     } else {
         response = `<div>Нет запроса с id = ${req.params.id}</div>`
     }
-    res.send(response);
+    res.send(config.start + response + config.end);
 })
 
 app.get('/scan/:id', (req: any, res: any) => {
@@ -97,7 +99,7 @@ app.get('/scan/:id', (req: any, res: any) => {
                 answer = `<div>Нет запроса с id = ${req.params.id}</div>`
             }
 
-            res.send(answer);
+            res.send(config.start + answer + config.end);
         });
 })
 
