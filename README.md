@@ -1,5 +1,5 @@
-# proxy_server_golang
-###Прокси север на Typescript
+# proxy_server_Typescript
+### Прокси север на Typescript
 Выполнил: Садыков, АПО-31
 
 - слушает на порту 8080
