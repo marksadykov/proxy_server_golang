@@ -30,6 +30,7 @@
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "http-proxy": "^1.18.1",
+    "node-fetch": "^2.6.1",
     "window": "^4.2.7"
   }
 }

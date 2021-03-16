@@ -8,12 +8,21 @@ const portStatic = config.portStatic;
 const Window = require('window');
 const window = new Window();
 
+const fetch = require('node-fetch');
+
 const http = require('http');
 
 const history = [];
 
 app.get('/', (req: any, res: any) => {
-    res.send('<div>lel</div>');
+    res.send(`<div>
+        <div>слушает на порту 8080</div>
+        <div>на порту 8000 веб-интерфейс</div>
+        <div>/requests – список запросов</div>
+        <div>/requests/id – вывод 1 запроса</div>
+        <div>/repeat/id – повторная отправка запроса</div>
+        <div>/scan/id – сканирование запроса</div>
+        </div>`);
 })
 
 app.get('/requests', (req: any, res: any) => {
@@ -73,9 +82,28 @@ app.get('/repeat/:id', (req: any, res: any) => {
     res.send(response);
 })
 
+app.get('/scan/:id', (req: any, res: any) => {
+    fetch('https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt')
+        .then((response: any) => response.text())
+        .then((textString: any) => {
+            let answer = '';
+            const vac = textString.split('\n');
+            const item = history[req.params.id];
+            if (item) {
+                vac.forEach((item:string)=>{
+                    answer+= `<div><span>404  </span>${item}</div>`
+                })
+            } else {
+                answer = `<div>Нет запроса с id = ${req.params.id}</div>`
+            }
+
+            res.send(answer);
+        });
+})
+
 
 app.listen(portStatic, () => {
-    console.log(`App listening at http://localhost:${portStatic}`);
+    console.log(`Static server listening at :: port ${portStatic}`);
 })
 
 const port = config.port;
@@ -88,7 +116,7 @@ const listener = server.listen(port, (err: any): (void) => {
         return console.error(err)
     }
     const info = listener.address()
-    console.log(`Server is listening on address ${info.address} port ${info.port}`)
+    console.log(`Proxy server is listening on address ${info.address} port ${info.port}`)
 })
 
 server.on('connect', (req: any, clientSocket: any, head: any) => {

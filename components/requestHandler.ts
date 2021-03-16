@@ -4,7 +4,7 @@ import {StringDecoder} from "string_decoder";
 const ab2str = require('arraybuffer-to-string')
 
 export function requestHandler(client_req: any, client_res: any, history: any) {
-    console.log('serve: ' + client_req.url);
+    console.log(client_req.url);
     delete client_req.headers['proxy-connection'];
 
     const regPath = new RegExp(client_req.headers.host);

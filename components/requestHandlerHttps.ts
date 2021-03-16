@@ -4,7 +4,7 @@ import * as url from "url";
 const ab2str = require('arraybuffer-to-string')
 
 export function requestHandlerHttps (req: any, clientSocket: any, head: any, history: any) {
-    console.log(clientSocket.remoteAddress, clientSocket.remotePort, req.method, req.url);
+    console.log(req.headers.referer);
     const regPath = new RegExp(req.headers.host.slice(0, req.headers.host.length - 4));
     const optionPath = req.headers.referer.replace(regPath, '').substr(req.headers.referer.replace(regPath, '').indexOf('://') + 3);
     const {port, hostname} = url.parse(`//${req.url}`, false, true);
