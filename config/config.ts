@@ -1,6 +1,6 @@
 export const config = {
     port: 8080,
-    portStatic: 8002,
+    portStatic: 8000,
     start: `<!DOCTYPE html>
                <html lang="ru">
                     <head>
