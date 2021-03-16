@@ -34,7 +34,8 @@ app.get('/requests/:id', (req: any, res: any) => {
     const item = history[req.params.id];
     if (item) {
         response = `<div><span>${item?.req?.headers?.host}</span></div>
-                        <div><span>${item?.body}</span></div>
+                        <div>Ответ:</div>
+                        <div>${item?.body}</div>
                     <hr>`;
     } else {
         response = `<div>Нет запроса с id = ${req.params.id}</div>`
@@ -52,7 +53,14 @@ app.get('/repeat/:id', (req: any, res: any) => {
         if (item.type === 'https') {
             requestHandlerHttps(item.req, item.clientSocket, 'a', history);
         }
-        response = `<div><span>${item?.req?.headers?.host} повторно!</span></div><hr>`;
+        response = `<div>
+                    <span>${item?.req?.headers?.host} повторно!</span>
+                    </div>
+                    <div>
+                    <div>Ответ:</div>
+                    <div>${item?.body}</div>
+                    </div>
+                    <hr>`;
     } else {
         response = `<div>Нет запроса с id = ${req.params.id}</div>`
     }

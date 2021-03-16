@@ -42,8 +42,10 @@ export function requestHandlerHttps (req: any, clientSocket: any, head: any, his
 
             let body = '';
             clientSocket.on('data', function (chunk: any) {
-                let str = new TextDecoder().decode(chunk);
-                body += str;
+                let json = JSON.stringify(chunk);
+                let AfterJson = JSON.parse(json);
+                let uint8 = new Uint8Array(AfterJson.data);
+                body += ab2str(uint8);
             });
             clientSocket.on('end', function () {
                 history.push({
